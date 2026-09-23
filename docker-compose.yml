@@ -4,6 +4,9 @@ services:
     image: ghcr.io/spiffe/spire-server:1.11.1
     container_name: spire-server
     hostname: spire-server
+    depends_on:
+      spire-server-init:
+        condition: service_completed_successfully
     command:
       - "/opt/spire/bin/spire-server"
       - "run"
@@ -28,6 +31,21 @@ services:
       timeout: 5s
       retries: 12
       start_period: 10s
+
+  # init: ensure named volumes have expected directories and permissions
+  spire-server-init:
+    image: alpine:3.20
+    container_name: spire-server-init
+    user: "0:0"
+    command: >
+      sh -c "mkdir -p /run/spire/data /tmp/spire-server/private /run/spire/bundle /run/spire/tokens && chmod 777 /run/spire/data /tmp/spire-server/private /run/spire/bundle /run/spire/tokens"
+    volumes:
+      - spire-server-data:/run/spire/data
+      - spire-server-socket:/tmp/spire-server/private
+      - spire-bundle:/run/spire/bundle
+      - spire-agent-token:/run/spire/tokens
+    networks:
+      - spire-net
 
   # region spire-agent-init
   spire-agent-init:
