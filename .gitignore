@@ -1,0 +1,11 @@
+# Docker / local runtime
+.env
+.env.*
+
+# SPIRE runtime data
+spire/server/data/*
+!spire/server/data/.gitkeep
+
+# General
+.DS_Store
+*.log
