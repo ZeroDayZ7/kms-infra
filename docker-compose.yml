@@ -11,7 +11,7 @@ services:
       - "/opt/spire/conf/server/server.conf"
     volumes:
       - ./spire/server:/opt/spire/conf/server:ro
-      - ./spire/server/data:/run/spire/data
+      - spire-server-data:/run/spire/data
       - spire-server-socket:/tmp/spire-server/private
     networks:
       - spire-net
@@ -75,7 +75,7 @@ services:
         echo "Trust bundle and join token prepared."
     volumes:
       - ./spire/server:/opt/spire/conf/server:ro
-      - ./spire/server/data:/run/spire/data
+      - spire-server-data:/run/spire/data
       - spire-agent-token:/run/spire/tokens
       - spire-server-socket:/tmp/spire-server/private:ro
       - spire-bundle:/run/spire/bundle
@@ -162,10 +162,12 @@ services:
         /usr/local/bin/spire-server entry create \
           -socketPath /tmp/spire-server/private/api.sock \
           -spiffeID "spiffe://example.org/kms" \
-          -selector "docker:label:com.docker.compose.service:kms-spire-service"
+          -parentID "spiffe://example.org/spire/agent/join_token/$(cat /run/spire/tokens/agent_token)" \
+          -selector "docker:label:com.docker.compose.service:spire-workload-init"
     volumes:
       - ./spire/server:/opt/spire/conf/server:ro
-      - ./spire/server/data:/run/spire/data
+      - spire-server-data:/run/spire/data
+      - spire-agent-token:/run/spire/tokens:ro
       - spire-server-socket:/tmp/spire-server/private:ro
     networks:
       - spire-net
@@ -185,6 +187,9 @@ services:
     depends_on:
       spire-agent:
         condition: service_healthy
+    labels:
+      - "com.docker.compose.service=spire-workload-init"
+    pid: "host"
     command:
       - |
         set -eu
@@ -217,6 +222,7 @@ services:
     volumes:
       - spire-agent-socket:/tmp:ro
       - spire-workload:/run/spire/workload
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       - spire-net
 

@@ -1,5 +1,5 @@
 NETWORK := kms_spire_net
-VOLUMES := spire-agent-socket spire-agent-token spire-server-socket spire-bundle spire-workload
+VOLUMES := spire-agent-socket spire-agent-token spire-server-socket spire-bundle spire-workload spire-server-data spire-agent-data
 
 .PHONY: setup up down logs clean-data
 
