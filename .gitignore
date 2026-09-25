@@ -9,3 +9,4 @@ spire/server/data/*
 # General
 .DS_Store
 *.log
+**/combined.txt
