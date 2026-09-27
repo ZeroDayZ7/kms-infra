@@ -4,6 +4,7 @@ services:
     working_dir: /workspace
     environment:
       - PATH=/usr/local/cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      - RUST_LOG=spire_kms_upstream_authority=trace,tonic=trace,hyper=trace
     volumes:
       - ../rust/kms-platform:/workspace
       - spire-plugin-bin:/out
