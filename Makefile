@@ -1,5 +1,5 @@
 NETWORK := kms_spire_net
-VOLUMES := spire-agent-socket spire-agent-token spire-server-socket spire-bundle spire-workload spire-server-data spire-agent-data
+VOLUMES := spire-agent-socket spire-agent-token spire-server-socket spire-bundle spire-workload spire-server-data spire-agent-data spire-plugin-bin
 
 .PHONY: setup up down logs clean reset
 
@@ -24,6 +24,7 @@ clean:
 	done
 	@docker volume rm -f kms_sockets >/dev/null 2>&1 || true
 	@docker volume rm -f spire_sockets >/dev/null 2>&1 || true
+	@docker volume rm -f spire-plugin-bin >/dev/null 2>&1 || true
 	@docker network rm $(NETWORK) >/dev/null 2>&1 || true
 
 reset: clean setup
