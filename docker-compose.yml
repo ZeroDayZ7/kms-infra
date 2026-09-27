@@ -2,11 +2,13 @@ services:
   spire-kms-plugin-builder:
     image: rust:1
     working_dir: /workspace
+    environment:
+      - PATH=/usr/local/cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     volumes:
       - ../rust/kms-platform:/workspace
       - spire-plugin-bin:/out
     command: >
-      sh -lc "apt-get update && apt-get install -y --no-install-recommends protobuf-compiler && cd /workspace && cargo build --release -p spire-kms-upstream-authority && install -m 0755 /workspace/target/release/spire-kms-upstream-authority /out/spire-kms-upstream-authority"
+      sh -lc "apt-get update && apt-get install -y --no-install-recommends protobuf-compiler && cd /workspace && /usr/local/cargo/bin/cargo build --release -p spire-kms-upstream-authority && install -m 0755 /workspace/target/release/spire-kms-upstream-authority /out/spire-kms-upstream-authority"
 
   # region spire-server
   spire-server:
