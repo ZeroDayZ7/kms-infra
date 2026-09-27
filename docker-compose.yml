@@ -1,6 +1,8 @@
 services:
   spire-kms-plugin-builder:
-    image: rust:1
+    build:
+      context: ../rust/kms-platform
+      dockerfile: crates/spire-kms-upstream-authority/Dockerfile
     working_dir: /workspace
     environment:
       - PATH=/usr/local/cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -9,7 +11,7 @@ services:
       - ../rust/kms-platform:/workspace
       - spire-plugin-bin:/out
     command: >
-      sh -lc "/usr/bin/apt-get update && /usr/bin/apt-get install -y --no-install-recommends musl-tools protobuf-compiler && /usr/local/cargo/bin/rustup target add x86_64-unknown-linux-musl && cd /workspace && /usr/local/cargo/bin/cargo build --release --target x86_64-unknown-linux-musl -p spire-kms-upstream-authority && install -m 0755 /workspace/target/x86_64-unknown-linux-musl/release/spire-kms-upstream-authority /out/spire-kms-upstream-authority && /usr/bin/file /out/spire-kms-upstream-authority && /usr/bin/ldd /out/spire-kms-upstream-authority || true"
+      sh -lc "cd /workspace && /usr/local/cargo/bin/cargo build --release --target x86_64-unknown-linux-musl -p spire-kms-upstream-authority && install -m 0755 /workspace/target/x86_64-unknown-linux-musl/release/spire-kms-upstream-authority /out/spire-kms-upstream-authority && /usr/bin/file /out/spire-kms-upstream-authority && /usr/bin/ldd /out/spire-kms-upstream-authority || true"
 
   # region spire-server
   spire-server:
