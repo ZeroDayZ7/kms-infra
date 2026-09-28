@@ -10,3 +10,4 @@ spire/server/data/*
 .DS_Store
 *.log
 **/combined.txt
+**/roznice.patch
