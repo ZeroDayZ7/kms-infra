@@ -27,7 +27,7 @@ clean:
 	@docker volume rm -f spire-plugin-bin >/dev/null 2>&1 || true
 	@docker network rm $(NETWORK) >/dev/null 2>&1 || true
 
-reset: #clean setup
+reset: clean setup
 	docker compose up -d --build
 
 logs:
